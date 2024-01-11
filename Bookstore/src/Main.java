@@ -12,11 +12,14 @@ public class Main {
         try{
            User user = new User();
            user.setPhone("+355692407540");
-           user.setEmail("rpbert23@hotmail.com");
+
+           user.setPassword("12dj");
         }catch(InvalidPhoneNumberException ex) {
             System.out.println(ex.getMessage());
         }catch(InvalidEmailException ex1){
             System.out.println(ex1.getMessage());
+        }catch(IncorrectPasswordException ex){
+            System.out.println(ex.getMessage());
         }
     }
     }

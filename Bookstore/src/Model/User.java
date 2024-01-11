@@ -26,9 +26,19 @@ public class User implements Serializable{
     public User()throws Exception{};
     public User(String username, String password, Role role) throws Exception {
         this.username=username;
-        setPassword(password);
+        this.password=password;
         this.role=role;
 
+    }
+    public User(String username, String password, Role role, String name, Date birthday, String phone, String email, double salary){
+        this.username = username;
+        this.password = password;
+        this.role = role;
+        this.name = name;
+        this.birthday = birthday;
+        this.phone = phone;
+        this.email = email;
+        this.salary = salary;
     }
 
     public String getUsername() {
@@ -49,7 +59,7 @@ public class User implements Serializable{
             this.password=password;
         }
         else{
-            throw new IncorrectPasswordException("The password must be at least 8 characters long and it must contain an Uppercase letter, Lowercase letter and Digit!");
+            throw new IncorrectPasswordException();
         }
     }
 
@@ -87,7 +97,7 @@ public class User implements Serializable{
             this.phone=phone;
         }
         else{
-            throw new InvalidPhoneNumberException("Invalid phone number!");
+            throw new InvalidPhoneNumberException();
         }
     }
 
@@ -101,7 +111,7 @@ public class User implements Serializable{
             this.email=email;
         }
         else{
-            throw new InvalidEmailException("Invalid email address. Only gmail, yahoo and hotmail are supported!");
+            throw new InvalidEmailException();
         }
     }
 
