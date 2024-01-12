@@ -3,6 +3,8 @@ package Model;
 import Exceptions.InvalidIsbnException;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -14,20 +16,26 @@ public class Book implements Serializable {
     private Date purchasedDate;
     private double purchasedPrice;
     private double sellingPrice;
-    private List<Author> authors;
+    private String author;
     private int stock;
+    private String imageURL;
 
     public Book(){};
-    public Book(String isbn, String title, String category, String supplier, Date purchasedDate, double purchasedPrice, double sellingPrice, List<Author> authors, int stock){
+    public Book(String isbn, String title, String category, String supplier, String purchasedDate, double purchasedPrice, double sellingPrice, String author, int stock){
 
         this.isbn = isbn;
         this.title = title;
         this.category = category;
         this.supplier = supplier;
-        this.purchasedDate = purchasedDate;
+        try{
+            SimpleDateFormat dateFormat= new SimpleDateFormat("dd-MM-yyyy");
+            this.purchasedDate=dateFormat.parse(purchasedDate);
+        } catch (ParseException ex){
+            System.out.println("Parse exception!");
+        }
         this.purchasedPrice = purchasedPrice;
         this.sellingPrice = sellingPrice;
-        this.authors = authors;
+        this.author = author;
         this.stock = stock;
     }
     public String getIsbn() {
@@ -101,11 +109,19 @@ public class Book implements Serializable {
         this.stock = stock;
     }
 
-    public List<Author> getAuthors() {
-        return authors;
+    public String getAuthor() {
+        return author;
     }
 
-    public void setAuthors(List<Author> authors) {
-        this.authors = authors;
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getImageURL() {
+        return imageURL;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
     }
 }

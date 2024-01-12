@@ -102,6 +102,7 @@ public class AddBookView extends Application {
         Scene scene = new Scene(root, rectangleWidth, rectangleHeight);
         addBookStage.setScene(scene);
         addBookStage.show();
+        //return bookCategoryField;
     }
 
     private void chooseImage(){

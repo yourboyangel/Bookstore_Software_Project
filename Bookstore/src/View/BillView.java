@@ -65,6 +65,7 @@ public class BillView extends Application {
         Scene scene = new Scene(root, rectangleWidth, rectangleHeight);
         billStage.setScene(scene);
         billStage.show();
+        //return isbnField;
     }
 
     private void processData(String isbn, int quantity) {

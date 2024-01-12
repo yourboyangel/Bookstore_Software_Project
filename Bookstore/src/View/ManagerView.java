@@ -117,6 +117,7 @@ public class ManagerView extends Application {
         managerStage.setTitle("Manager View");
         managerStage.setFullScreen(true);
         managerStage.show();
+        //return null;
     }
 
     private String getStatistics(String option) {

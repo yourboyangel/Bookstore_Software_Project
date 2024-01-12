@@ -5,6 +5,6 @@ public class IncorrectPasswordException extends Exception{
     }
     @Override
     public String getMessage(){
-        return "The password must be at least 8 characters long and it must contain an Uppercase letter, Lowercase letter and Digit!";
+        return "Incorrect Username or Password!";
     }
 }
