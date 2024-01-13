@@ -18,10 +18,13 @@ public class Book implements Serializable {
     private double sellingPrice;
     private String author;
     private int stock;
-    private String imageURL;
+    private String imageName;
+
+    private int quantity;
+    private double totalPrice;
 
     public Book(){};
-    public Book(String isbn, String title, String category, String supplier, String purchasedDate, double purchasedPrice, double sellingPrice, String author, int stock){
+    public Book(String isbn, String title, String category, String supplier, String purchasedDate, double purchasedPrice, double sellingPrice, String author, int stock, String imageName){
 
         this.isbn = isbn;
         this.title = title;
@@ -37,6 +40,22 @@ public class Book implements Serializable {
         this.sellingPrice = sellingPrice;
         this.author = author;
         this.stock = stock;
+        this.imageName=imageName;
+    }
+    public Book(String title,String category,String isbn,String author, double sellingPrice, int quantity){
+
+        this.title = title;
+        this.category = category;
+        this.isbn = isbn;
+        this.author = author;
+        this.sellingPrice = sellingPrice;
+        this.quantity = quantity;
+    }
+    public Book(String title, int quantity, double totalPrice){
+
+        this.title = title;
+        this.quantity = quantity;
+        this.totalPrice = totalPrice;
     }
     public String getIsbn() {
         return isbn;
@@ -117,11 +136,22 @@ public class Book implements Serializable {
         this.author = author;
     }
 
-    public String getImageURL() {
-        return imageURL;
+    public String getImageName() {
+        return imageName;
     }
 
-    public void setImageURL(String imageURL) {
-        this.imageURL = imageURL;
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
+
+
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public double getTotalPrice() {
+        return totalPrice;
     }
 }
+

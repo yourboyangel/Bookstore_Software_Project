@@ -1,0 +1,5 @@
+ISBN,Title,Category,Supplier,PurchasedDate,PurchasedPrice,SellingPrice,Author,Stock
+978-1-1234-5678-9,Book1,Fiction,SupplierA,2022-01-15,15.00,35.00,Author1,50
+978-2-2345-6789-0,Book2,Non-Fiction,SupplierB,2022-02-20,20.00,40.00,Author2,30
+978-3-3456-7890-1,Book3,Mystery,SupplierC,2022-03-25,18.00,38.00,Author3,40
+978-4-4567-8901-2,Book4,Science Fiction,SupplierD,2022-04-30,25.00,45.00,Author4,25
