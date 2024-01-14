@@ -5,12 +5,14 @@ import Exceptions.InvalidEmailException;
 import Exceptions.InvalidPhoneNumberException;
 import Model.BinaryFileHandler;
 import Model.User;
+import View.HomepageView;
 import View.LoginView;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 import java.util.ArrayList;
 
@@ -31,6 +33,7 @@ public class LogInController {
             try{
                 userValidation(username,password);
                 showInformationAlert("Login Successful","Welcome "+ username +"!");
+                openHomepageView(loginView);
             } catch (InvalidEmailException | IncorrectPasswordException | InvalidPhoneNumberException ex){
                 showErrorAlert("Login Failed",ex.getMessage());
             }
@@ -60,6 +63,19 @@ public class LogInController {
 
         if(!foundUser){
             throw new IncorrectPasswordException();
+        }
+    }
+    private void openHomepageView(LoginView loginView) {
+        // Close the login stage
+        Stage loginStage = (Stage) loginView.getLoginButton().getScene().getWindow();
+        loginStage.close();
+
+        // Open the HomepageView
+        try {
+            Stage homepageStage = new Stage();
+            new HomepageView().start(homepageStage);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
     private void showInformationAlert(String title, String content){

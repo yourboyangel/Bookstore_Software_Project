@@ -1,8 +1,6 @@
-book1.jpg,Can't Hurt Me,Self-Improvement,1234-23-4321,David Goggins,55, 40,40
-book2.jpg,Attack On Titan,Manga,5678-45-6789,Hajime Isayama,45,30,30
-book3.jpg,Demon Slayer,Manga,9876-54-3210,Koyoharu Gotouge,40,30,20
-book4.jpg,Your Next Five Moves,Self-Improvement,1234-23-4321,Patrick Bet-David,45,35,40
-book5.jpg,Jujutsu Kaisen,Manga,5678-45-6789,Gege Akutami,67,25,30
-book6.jpg,Atomic Habits,Self-Improvement,9876-54-3210,James Clear,80,40,20
-book7.jpg,Dragon Ball Super,Manga,1234-23-4321,Akira Toriyama,48,35,40
-book8.jpg,Rich Dad Poor Dad,Finance,5678-45-6789,Robert T.Kiyosaki,40,25,30
+book9,Harry Potter,dyhuhuiio,yuuioi,vyiui,12,123,2
+
+book9,Harry Potter,Fantasy,1111-22-3334,J.K.Rowling,35,18,10
+
+book9,buijo,uhijo,huijo,huijok,12,12,2
+book9,yguuioio,uhii,ygiuhi,yuiui,12,2,19

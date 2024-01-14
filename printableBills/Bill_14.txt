@@ -1,0 +1,4 @@
+Bill Number: 14
+Title: Demon Slayer, Quantity: 2, Total Price: $80.0
+Title: Attack On Titan, Quantity: 3, Total Price: $135.0
+Total Price: $215.0

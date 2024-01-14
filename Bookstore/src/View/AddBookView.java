@@ -1,5 +1,6 @@
-
 package View;
+
+import Controller.AddBookController;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -20,18 +21,28 @@ import javafx.stage.Stage;
 
 import java.io.File;
 
-
 public class AddBookView extends Application {
     private ImageView imageView;
+    private TextField bookUrlField;
+    private TextField bookNameField;
+    private TextField categoryField;
+    private TextField isbnField;
+    private TextField authorField;
+    private TextField sellingPriceField;
+    private TextField purchasingPriceField;
+    private TextField stockField;
+    private Button submitButton;
+
     public static void main(String[] args) {
         launch(args);
     }
+
     @Override
     public void start(Stage addBookStage) {
         addBookStage.setTitle("Add Book");
 
         double rectangleWidth = 400;
-        double rectangleHeight = 500;
+        double rectangleHeight = 600;
 
         Rectangle background = new Rectangle(rectangleWidth, rectangleHeight);
         background.setFill(Color.LIGHTBLUE);
@@ -41,60 +52,77 @@ public class AddBookView extends Application {
         grid.setVgap(10);
         grid.setPadding(new Insets(20, 20, 20, 20));
 
-        Label bookCategoryLabel = new Label("Book Category: ");
-        TextField bookCategoryField = new TextField();
-        grid.add(bookCategoryLabel, 0, 0);
-        grid.add(bookCategoryField, 1, 0);
-
-        Label authorLabel = new Label("Authors: ");
-        TextField authorField = new TextField();
-        grid.add(authorLabel, 0, 1);
-        grid.add(authorField, 1, 1);
-
-
-
         Label pictureBookLabel = new Label("Book URL Picture: ");
-        TextField pictureUrlField = new TextField();
-        pictureUrlField.setOnKeyPressed(event -> {
-            if(event.getCode() == KeyCode.ENTER){
-                String pictureBookUrl = pictureUrlField.getText();
-                if(!pictureBookUrl.isEmpty()){
+        bookUrlField = new TextField();
+        bookUrlField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                String pictureBookUrl = bookUrlField.getText();
+                if (!pictureBookUrl.isEmpty()) {
                     Image image = new Image(pictureBookUrl);
                     imageView.setImage(image);
                 }
             }
         });
-        grid.add(pictureBookLabel, 0, 2);
-        grid.add(pictureUrlField, 1,2);
+        grid.add(pictureBookLabel, 0, 0);
+        grid.add(bookUrlField, 1, 0);
+
+        Label bookNameLabel = new Label("Book Name: ");
+        bookNameField = new TextField();
+        grid.add(bookNameLabel, 0, 1);
+        grid.add(bookNameField, 1, 1);
+
+        Label categoryLabel = new Label("Category: ");
+        categoryField = new TextField();
+        grid.add(categoryLabel, 0, 2);
+        grid.add(categoryField, 1, 2);
+
+        Label isbnLabel = new Label("ISBN: ");
+        isbnField = new TextField();
+        grid.add(isbnLabel, 0, 3);
+        grid.add(isbnField, 1, 3);
+
+        Label authorLabel = new Label("Author: ");
+        authorField = new TextField();
+        grid.add(authorLabel, 0, 4);
+        grid.add(authorField, 1, 4);
+
+        Label sellingPriceLabel = new Label("Selling Price: ");
+        sellingPriceField = new TextField();
+        grid.add(sellingPriceLabel, 0, 5);
+        grid.add(sellingPriceField, 1, 5);
+
+        Label purchasingPriceLabel = new Label("Purchasing Price: ");
+        purchasingPriceField = new TextField();
+        grid.add(purchasingPriceLabel, 0, 6);
+        grid.add(purchasingPriceField, 1, 6);
+
+        Label stockLabel = new Label("Stock: ");
+        stockField = new TextField();
+        grid.add(stockLabel, 0, 7);
+        grid.add(stockField, 1, 7);
 
         imageView = new ImageView();
-        imageView.setFitWidth(200);
-        imageView.setFitHeight(300);
-        grid.add(imageView, 1,3);
-
-        Button chooseImageButton = new Button("Choose Image");
-        chooseImageButton.setOnAction(e -> chooseImage());
-        grid.add(chooseImageButton, 1, 4);
-
-
+        imageView.setFitWidth(150);  // Adjusted size
+        imageView.setFitHeight(225); // Adjusted size
+        grid.add(imageView, 1, 8);
 
         Button submitButton = new Button("Create");
-        submitButton.setOnAction(e -> {
-            String bookCategory = bookCategoryField.getText();
-            String author = authorField.getText();
-
-            processData(bookCategory, author);
-            bookCategoryField.clear();
-            authorField.clear();
-        });
-
         submitButton.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-weight: bold; -fx-background-radius: 15; -fx-border-radius: 15;");
-        grid.add(submitButton, 1, 5);
+        grid.add(submitButton, 1, 10);
+
+        this.submitButton=submitButton;
+
+        AddBookController controller = new AddBookController(this);
 
         Font timesNewRomanBold = Font.font("Times New Roman", FontWeight.BOLD, Font.getDefault().getSize());
-        bookCategoryLabel.setFont(timesNewRomanBold);
-        authorLabel.setFont(timesNewRomanBold);
         pictureBookLabel.setFont(timesNewRomanBold);
+        bookNameLabel.setFont(timesNewRomanBold);
+        categoryLabel.setFont(timesNewRomanBold);
+        isbnLabel.setFont(timesNewRomanBold);
+        authorLabel.setFont(timesNewRomanBold);
+        sellingPriceLabel.setFont(timesNewRomanBold);
+        purchasingPriceLabel.setFont(timesNewRomanBold);
+        stockLabel.setFont(timesNewRomanBold);
 
         Pane root = new Pane(background, grid);
         root.setPrefSize(rectangleWidth, rectangleHeight);
@@ -102,19 +130,54 @@ public class AddBookView extends Application {
         Scene scene = new Scene(root, rectangleWidth, rectangleHeight);
         addBookStage.setScene(scene);
         addBookStage.show();
-        //return bookCategoryField;
     }
 
-    private void chooseImage(){
+    private void chooseImage() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choose Book Image");
         File file = fileChooser.showOpenDialog(null);
-        if(file!=null){
+        if (file != null) {
             Image image = new Image(file.toURI().toString());
             imageView.setImage(image);
         }
     }
-    private void processData(String bookCategory, String author) {
-        System.out.println("Book Category: " + bookCategory + ", Author: " + author);
+    // Inside AddBookView class
+
+    public TextField getBookUrlField() {
+        return bookUrlField;
     }
+
+    public TextField getBookNameField() {
+        return bookNameField;
+    }
+
+    public TextField getCategoryField() {
+        return categoryField;
+    }
+
+    public TextField getIsbnField() {
+        return isbnField;
+    }
+
+    public TextField getAuthorField() {
+        return authorField;
+    }
+
+    public TextField getSellingPriceField() {
+        return sellingPriceField;
+    }
+
+    public TextField getPurchasingPriceField() {
+        return purchasingPriceField;
+    }
+
+    public TextField getStockField() {
+        return stockField;
+    }
+
+    public Button getSubmitButton() {
+        return submitButton;
+    }
+
+
 }

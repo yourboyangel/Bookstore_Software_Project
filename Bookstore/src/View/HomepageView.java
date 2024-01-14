@@ -16,6 +16,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -112,7 +113,19 @@ public class HomepageView extends Application {
         addButton.setStyle("-fx-background-color:transparent;-fx-border-color:green;-fx-border-radius:10;-fx-border-width:2;");
 
 
-        ComboBox<Button> actionComboBox = new ComboBox<>();
+        ComboBox<String> actionComboBox = new ComboBox<>();
+        actionComboBox.getItems().addAll("Create Bill", "Add Book", "Check Librarian Performance", "Book Statistics", "Manage Employees", "Total Cost");
+
+// Set the style for the ComboBox
+        actionComboBox.setStyle("-fx-font-size: 14pt; -fx-background-color: transparent; -fx-border-color: green; -fx-border-radius: 10; -fx-border-width: 2;");
+
+        actionComboBox.setOnAction(event -> {
+            // Handle the selected action
+            String selectedAction = actionComboBox.getSelectionModel().getSelectedItem();
+            if (selectedAction != null) {
+                handleComboBoxAction(selectedAction);
+            }
+        });
 
 // Create buttons for each action
         Button createBillButton = createComboBoxButton("Create Bill");
@@ -121,24 +134,6 @@ public class HomepageView extends Application {
         Button bookStatisticsButton = createComboBoxButton("Book Statistics");
         Button manageEmployeesButton = createComboBoxButton("Manage Employees");
         Button totalCostButton = createComboBoxButton("Total Cost");
-
-// Add buttons to the ComboBox
-        actionComboBox.getItems().addAll(createBillButton, addBookButton, checkLibrarianPerformanceButton, bookStatisticsButton, manageEmployeesButton, totalCostButton);
-
-
-
-// Set the style for the ComboBox
-        actionComboBox.setStyle("-fx-font-size: 14pt; -fx-background-color: transparent; -fx-border-color: green; -fx-border-radius: 10; -fx-border-width: 2;");
-
-        actionComboBox.setOnAction(event -> {
-            // Handle the selected action
-            Button selectedButton = actionComboBox.getSelectionModel().getSelectedItem();
-            if (selectedButton != null) {
-                handleComboBoxAction(selectedButton.getText());
-            }
-        });
-
-
 
 
         bookContainer = new VBox();
@@ -496,15 +491,24 @@ public class HomepageView extends Application {
                     Stage billStage = new Stage();
                     new BillView().start(billStage);
 
-                    // Close the current stage (importantView stage)
-                    Stage currentStage = (Stage) bookContainer.getScene().getWindow();
-                    currentStage.close();
-                }catch (Exception e) {
+                    // Prevent the new stage from closing the main stage
+                    billStage.initModality(Modality.WINDOW_MODAL);
+                    billStage.initOwner(bookContainer.getScene().getWindow());
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 break;
             case "Add Book":
-                // Add your logic for 'Add Book'
+                try {
+                    Stage addBookStage = new Stage();
+                    new AddBookView().start(addBookStage);
+
+                    // Prevent the new stage from closing the main stage
+                    addBookStage.initModality(Modality.WINDOW_MODAL);
+                    addBookStage.initOwner(bookContainer.getScene().getWindow());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
             case "Check Librarian Performance":
                 // Add your logic for 'Check Librarian Performance'

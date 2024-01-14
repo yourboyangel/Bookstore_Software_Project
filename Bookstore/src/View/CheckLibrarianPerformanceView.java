@@ -22,6 +22,7 @@ import java.time.temporal.ChronoUnit;
 public class CheckLibrarianPerformanceView extends Application {
     private Label dataLabel;
 
+
     @Override
     public void start(Stage stage) {
         VBox vbox = new VBox();

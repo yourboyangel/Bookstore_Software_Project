@@ -1,0 +1,4 @@
+Transaction Date: 2024-01-01
+Title: Demon Slayer, Quantity: 30, Total Price: $1200.0
+
+Total Price: $1200.0
