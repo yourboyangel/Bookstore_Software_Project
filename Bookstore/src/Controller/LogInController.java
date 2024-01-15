@@ -45,12 +45,14 @@ public class LogInController {
         BinaryFileHandler<ArrayList<User>> fileHandler = new BinaryFileHandler<>();
 
         try {
-            return fileHandler.readObjectFromFile(filePath);
+            ArrayList<User> users = fileHandler.readObjectFromFile(filePath);
+            return users != null ? users : new ArrayList<>();
         } catch (ClassCastException e) {
             System.err.println("Error reading user data from file. Check if the file contains the correct data.");
             return new ArrayList<>();
         }
     }
+
 
     private void userValidation(String username, String password) throws InvalidEmailException, IncorrectPasswordException, InvalidPhoneNumberException{
         boolean foundUser=false;

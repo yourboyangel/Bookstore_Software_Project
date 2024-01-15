@@ -489,11 +489,12 @@ public class HomepageView extends Application {
             case "Create Bill":
                 try {
                     Stage billStage = new Stage();
-                    new BillView().start(billStage);
+
 
                     // Prevent the new stage from closing the main stage
                     billStage.initModality(Modality.WINDOW_MODAL);
                     billStage.initOwner(bookContainer.getScene().getWindow());
+                    new BillView().start(billStage);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -501,11 +502,12 @@ public class HomepageView extends Application {
             case "Add Book":
                 try {
                     Stage addBookStage = new Stage();
-                    new AddBookView().start(addBookStage);
+
 
                     // Prevent the new stage from closing the main stage
                     addBookStage.initModality(Modality.WINDOW_MODAL);
                     addBookStage.initOwner(bookContainer.getScene().getWindow());
+                    new AddBookView().start(addBookStage);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

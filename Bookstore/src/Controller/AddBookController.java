@@ -44,6 +44,8 @@ public class AddBookController {
             writer.newLine();
             writer.flush();
 
+
+
             // Show a success message
             showAlert("Book Added", "Book data added successfully!");
 
@@ -56,6 +58,9 @@ public class AddBookController {
             addBookView.getSellingPriceField().clear();
             addBookView.getPurchasingPriceField().clear();
             addBookView.getStockField().clear();
+
+
+
 
         } catch (IOException e) {
             // Show an error message if writing to the file fails

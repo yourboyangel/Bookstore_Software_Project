@@ -102,15 +102,15 @@ public class AddBookView extends Application {
         grid.add(stockField, 1, 7);
 
         imageView = new ImageView();
-        imageView.setFitWidth(150);  // Adjusted size
-        imageView.setFitHeight(225); // Adjusted size
+        imageView.setFitWidth(150);
+        imageView.setFitHeight(225);
         grid.add(imageView, 1, 8);
 
         Button submitButton = new Button("Create");
         submitButton.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-weight: bold; -fx-background-radius: 15; -fx-border-radius: 15;");
         grid.add(submitButton, 1, 10);
 
-        this.submitButton=submitButton;
+        this.submitButton = submitButton;
 
         AddBookController controller = new AddBookController(this);
 
@@ -141,7 +141,6 @@ public class AddBookView extends Application {
             imageView.setImage(image);
         }
     }
-    // Inside AddBookView class
 
     public TextField getBookUrlField() {
         return bookUrlField;
@@ -178,6 +177,4 @@ public class AddBookView extends Application {
     public Button getSubmitButton() {
         return submitButton;
     }
-
-
 }

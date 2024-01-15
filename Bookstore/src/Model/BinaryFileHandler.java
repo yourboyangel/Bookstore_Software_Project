@@ -9,6 +9,7 @@ public class BinaryFileHandler<T> {
             System.out.println("Object written to file.");
         } catch (IOException ex) {
             System.out.println("Error writing object to file!");
+            ex.printStackTrace(); // Print the stack trace for debugging
         }
     }
 
@@ -19,6 +20,7 @@ public class BinaryFileHandler<T> {
             return object;
         } catch (IOException | ClassNotFoundException ex) {
             System.out.println("Error reading object from file.");
+            ex.printStackTrace(); // Print the stack trace for debugging
             return null;
         }
     }

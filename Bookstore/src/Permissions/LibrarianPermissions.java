@@ -2,9 +2,16 @@ package Permissions;
 
 import Model.Role;
 
-public class LibrarianPermissions extends Permission{
+import java.io.Serializable;
+
+public class LibrarianPermissions implements Permission, Serializable {
     @Override
-    protected String[] getPermissionRole(Role role){
+    public String[] getPermissions() {
         return new String[]{CREATE_BILL};
+    }
+
+    @Override
+    public boolean hasPermission(Role role, String permission) {
+        return false; // Implement as needed
     }
 }

@@ -20,7 +20,7 @@ import java.util.Scanner;
 public class BillView extends Application {
     private static final String FILE_PATH = "billData.txt";
     private static final String PRINTABLE_BILL_PATH = "printableBills";
-    private static final String BOOK_DATA_PATH = "bookData.txt";
+    private static final String BOOK_DATA_PATH = "Bookstore/src/bookData.txt";
     private static final String BILL_NUMBER_FILE = "billNumber.txt";
 
     private double totalPrice = 0;

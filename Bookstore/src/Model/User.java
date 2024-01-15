@@ -1,11 +1,15 @@
 package Model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import Exceptions.IncorrectPasswordException;
 import Exceptions.InvalidEmailException;
 import Exceptions.InvalidPhoneNumberException;
+import Permissions.Permission;
 import javafx.beans.property.SimpleStringProperty;
 
 public class User implements Serializable{
@@ -17,6 +21,8 @@ public class User implements Serializable{
     private String phone;
     private String email;
     private double salary;
+    private Set<String> permissions;
+
 
     private transient SimpleStringProperty nameProperty;
     private transient SimpleStringProperty usernameProperty;
@@ -39,6 +45,7 @@ public class User implements Serializable{
         this.phone = phone;
         this.email = email;
         this.salary = salary;
+        this.permissions=new HashSet<>();
     }
 
     public String getUsername() {
@@ -169,6 +176,27 @@ public class User implements Serializable{
 
     public void setPhoneProperty(String phoneProperty) {
         this.phoneProperty.set(phoneProperty);
+    }
+
+    public Set<String> getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(Set<String> permissions) {
+        this.permissions = permissions;
+    }
+    public void addPermission(String permission) {
+        permissions.add(permission);
+    }
+
+    // Method to remove a permission
+    public void removePermission(String permission) {
+        permissions.remove(permission);
+    }
+
+    // Method to check if a user has a specific permission
+    public boolean hasPermission(String permission) {
+        return permissions.contains(permission);
     }
 }
 
