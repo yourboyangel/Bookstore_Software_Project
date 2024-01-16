@@ -1,7 +1,10 @@
 package View;
+
 import javafx.application.Application;
+
 import java.util.Collections;
 import java.util.Comparator;
+
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -26,7 +29,7 @@ import java.util.List;
 
 public class HomepageView extends Application {
     private VBox bookContainer;
-    private  ComboBox<String> filterComboBox;
+    private ComboBox<String> filterComboBox;
     private List<VBox> bookBoxes;
     private List<VBox> originalOrder;
 
@@ -62,16 +65,16 @@ public class HomepageView extends Application {
         searchBar.setPromptText("Search book");
 
         searchBar.setOnAction(event -> {
-            List<VBox> filteredBooks = filterBooksByTitle(bookBoxes, searchBar.getText());
+            List<VBox> filteredBooks = filterBooksByISBN(bookBoxes, searchBar.getText());
             updateBookDisplay(filteredBooks);
         });
 
 
         filterComboBox = new ComboBox<>();
-        filterComboBox.getItems().addAll("Sort", "Title", "Category", "Authors");
+        filterComboBox.getItems().addAll("Sort", "Title", "Category", "Authors", "ISBN");
         filterComboBox.setValue("Sort");
         filterComboBox.setStyle("-fx-font-size: 14pt; -fx-background-color: transparent; -fx-border-color: green; -fx-border-radius: 10; -fx-border-width: 2;");
-// Modify the searchBar.textProperty().addListener(...) method
+
         searchBar.textProperty().addListener((observable, oldValue, newValue) -> {
             List<VBox> filteredBooks;
 
@@ -79,10 +82,11 @@ public class HomepageView extends Application {
                 filteredBooks = filterBooksByTitle(bookBoxes, newValue);
             } else if ("Category".equals(filterComboBox.getValue())) {
                 filteredBooks = filterBooksByCategory(bookBoxes, newValue);
-            } else if ("Authors".equals(filterComboBox.getValue())) {  // Update "Author" to "Authors" here
+            } else if ("Authors".equals(filterComboBox.getValue())) {
                 filteredBooks = filterBooksByAuthor(bookBoxes, newValue);
+            } else if ("ISBN".equals(filterComboBox.getValue())) {
+                filteredBooks = filterBooksByISBN(bookBoxes, newValue);
             } else {
-                // Handle other filters if needed
                 return;
             }
 
@@ -91,13 +95,13 @@ public class HomepageView extends Application {
 
 
         filterComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.equals("Title") && !newValue.equals("Category") && !newValue.equals("Authors")) {
-                // Reset to default value if the selected value is not recognized
+            if (!newValue.equals("Title") && !newValue.equals("Category") && !newValue.equals("Authors") && !newValue.equals("ISBN")) {
+
                 filterComboBox.setValue("Sort");
             } else {
-                // Handle the recognized filters if needed
+
                 if (newValue.equals("Sort")) {
-                    // Restore the original order
+
                     updateBookDisplay(originalOrder);
                 }
             }
@@ -116,24 +120,23 @@ public class HomepageView extends Application {
         ComboBox<String> actionComboBox = new ComboBox<>();
         actionComboBox.getItems().addAll("Create Bill", "Add Book", "Check Librarian Performance", "Book Statistics", "Manage Employees", "Total Cost");
 
-// Set the style for the ComboBox
+
         actionComboBox.setStyle("-fx-font-size: 14pt; -fx-background-color: transparent; -fx-border-color: green; -fx-border-radius: 10; -fx-border-width: 2;");
 
         actionComboBox.setOnAction(event -> {
-            // Handle the selected action
             String selectedAction = actionComboBox.getSelectionModel().getSelectedItem();
             if (selectedAction != null) {
                 handleComboBoxAction(selectedAction);
             }
         });
 
-// Create buttons for each action
         Button createBillButton = createComboBoxButton("Create Bill");
         Button addBookButton = createComboBoxButton("Add Book");
         Button checkLibrarianPerformanceButton = createComboBoxButton("Check Librarian Performance");
         Button bookStatisticsButton = createComboBoxButton("Book Statistics");
         Button manageEmployeesButton = createComboBoxButton("Manage Employees");
         Button totalCostButton = createComboBoxButton("Total Cost");
+//
 
 
         bookContainer = new VBox();
@@ -144,20 +147,16 @@ public class HomepageView extends Application {
         bookBoxes = readBookDataFromFile("bookData.txt");
 
         originalOrder = new ArrayList<>(bookBoxes);
-// Create rows of VBox
         int booksPerRow = 4;
 
-        // Replace the loop where you create HBox for each row with the following
         for (int i = 0; i < bookBoxes.size(); i += booksPerRow) {
-            StackPane row = new StackPane(); // Use StackPane for centering
-            HBox booksHBox = new HBox(); // Use HBox for horizontal arrangement
-            booksHBox.setAlignment(Pos.CENTER); // Center books in the row
-            booksHBox.setSpacing(40);  // Adjust the spacing as needed
+            StackPane row = new StackPane();
+            HBox booksHBox = new HBox();
+            booksHBox.setAlignment(Pos.CENTER);
+            booksHBox.setSpacing(40);
 
-            // Calculate the number of books to add in this row
             int booksInThisRow = Math.min(booksPerRow, bookBoxes.size() - i);
 
-            // Create HBox for each book in this row
             for (int j = i; j < i + booksInThisRow; j++) {
                 VBox bookVBox = bookBoxes.get(j);
                 booksHBox.getChildren().add(bookVBox);
@@ -166,7 +165,6 @@ public class HomepageView extends Application {
             row.getChildren().add(booksHBox);
             bookContainer.getChildren().add(row);
 
-            // Add a separator line between rows
             if (i + booksInThisRow < bookBoxes.size()) {
                 Separator separator = new Separator();
                 separator.setOrientation(Orientation.HORIZONTAL);
@@ -174,7 +172,6 @@ public class HomepageView extends Application {
             }
         }
 
-// Set the alignment of bookContainer to center
         bookContainer.setAlignment(Pos.CENTER);
 
         ScrollPane scrollPane = new ScrollPane();
@@ -188,7 +185,6 @@ public class HomepageView extends Application {
         backButton.setMaxHeight(38);
         backButton.setMinHeight(38);
         backButton.setOnAction(event -> {
-            // Reset to original order and set filterComboBox to "Sort"
             updateBookDisplay(originalOrder);
             filterComboBox.setValue("Sort");
             searchBar.clear();
@@ -207,7 +203,6 @@ public class HomepageView extends Application {
         stage.setWidth(screen.getVisualBounds().getWidth());
         stage.setHeight(screen.getVisualBounds().getHeight());
 
-        // Use Platform.runLater to update UI on the JavaFX Application Thread
         Platform.runLater(stage::show);
     }
 
@@ -217,7 +212,7 @@ public class HomepageView extends Application {
 
         if (imageStream == null) {
             System.out.println("Image not found: " + imagePath);
-            return new VBox(); // or handle the missing image in some way
+            return new VBox();
         }
 
         Image bookImage = new Image(imageStream);
@@ -226,28 +221,24 @@ public class HomepageView extends Application {
         bookImageView.setFitWidth(200);
         bookImageView.setFitHeight(250);
 
-        // VBox for book attributes
         VBox attributesBox = new VBox();
         attributesBox.setAlignment(Pos.CENTER_LEFT);
         attributesBox.setSpacing(5);
 
-        // String title, String category, String isbn, String author, double sellingPrice, double purchasingPrice, int stock
         Label titleLabel = createLabel("Title: " + title);
         Label categoryLabel = createLabel("Category: " + category);
         Label isbnLabel = createLabel("ISBN: " + isbn);
         Label authorLabel = createLabel("Author: " + author);
         Label sellingPriceLabel = createLabel("Selling Price: $" + sellingPrice);
-        Label purchasingPriceLabel = createLabel("Purchasing Price: $" + purchasingPrice); // New field
+        Label purchasingPriceLabel = createLabel("Purchasing Price: $" + purchasingPrice);
         Label stockLabel = createLabel("Stock: " + stock);
 
         attributesBox.getChildren().addAll(titleLabel, categoryLabel, isbnLabel, authorLabel, sellingPriceLabel, purchasingPriceLabel, stockLabel);
 
-        // VBox for book and details
         VBox bookVBox = new VBox();
         bookVBox.getChildren().add(bookImageView);
         bookVBox.getChildren().addAll(attributesBox);
 
-        // Box for book details
         bookVBox.setStyle("-fx-background-color: transparent; -fx-border-color: black; -fx-border-radius: 10; -fx-border-width: 3px; -fx-padding: 10px;");
         bookVBox.setAlignment(Pos.CENTER);
         bookVBox.setPadding(new Insets(10, 0, 0, 0));
@@ -256,10 +247,9 @@ public class HomepageView extends Application {
     }
 
     private VBox createBookFromData(String[] bookData) {
-        // Extracting data from the array
         if (bookData.length < 8) {
             System.out.println("Invalid data format. Insufficient elements in the array. Data: " + String.join(",", bookData));
-            return new VBox();  // or handle the situation in some way
+            return new VBox();
         }
 
         String imageName = bookData[0];
@@ -268,7 +258,7 @@ public class HomepageView extends Application {
         String isbn = bookData[3];
         String author = bookData[4];
         double sellingPrice = Double.parseDouble(bookData[5]);
-        double purchasingPrice = Double.parseDouble(bookData[6]); // New field
+        double purchasingPrice = Double.parseDouble(bookData[6]);
         int stock = Integer.parseInt(bookData[7]);
 
         String imagePath = "/Images/" + imageName;
@@ -276,7 +266,7 @@ public class HomepageView extends Application {
 
         if (imageStream == null) {
             System.out.println("Image not found: " + imagePath);
-            return new VBox(); // or handle the missing image in some way
+            return new VBox();
         }
 
         Image bookImage = new Image(imageStream);
@@ -285,41 +275,36 @@ public class HomepageView extends Application {
         bookImageView.setFitWidth(200);
         bookImageView.setFitHeight(250);
 
-        // VBox for book attributes
         VBox attributesBox = new VBox();
         attributesBox.setAlignment(Pos.CENTER_LEFT);
         attributesBox.setSpacing(5);
 
-        // String title, String category, String isbn, String author, double sellingPrice, double purchasingPrice, int stock
         Label titleLabel = createLabel("Title: " + title);
         Label categoryLabel = createLabel("Category: " + category);
         Label isbnLabel = createLabel("ISBN: " + isbn);
         Label authorLabel = createLabel("Author: " + author);
         Label sellingPriceLabel = createLabel("Selling Price: $" + sellingPrice);
-        Label purchasingPriceLabel = createLabel("Purchasing Price: $" + purchasingPrice); // New field
+        Label purchasingPriceLabel = createLabel("Purchasing Price: $" + purchasingPrice);
         Label stockLabel = createLabel("Stock: " + stock);
 
         attributesBox.getChildren().addAll(titleLabel, categoryLabel, isbnLabel, authorLabel, sellingPriceLabel, purchasingPriceLabel, stockLabel);
 
-        // VBox for book and details
         VBox bookVBox = new VBox();
         bookVBox.getChildren().add(bookImageView);
         bookVBox.getChildren().addAll(attributesBox);
 
-        // Box for book details
         bookVBox.setStyle("-fx-background-color: transparent; -fx-border-color: black; -fx-border-radius: 10; -fx-border-width: 3px; -fx-padding: 10px;");
         bookVBox.setAlignment(Pos.CENTER);
         bookVBox.setPadding(new Insets(10, 0, 0, 0));
 
         return bookVBox;
     }
+
     private Label createLabel(String text) {
         Label label = new Label(text);
         label.setFont(Font.font("Times New Roman", FontWeight.BOLD, 14));
         return label;
     }
-
-
 
     private List<VBox> readBookDataFromFile(String filePath) {
         List<VBox> bookBoxes = new ArrayList<>();
@@ -329,14 +314,12 @@ public class HomepageView extends Application {
 
             if (inputStream == null) {
                 System.out.println("File not found: " + filePath);
-                return bookBoxes;  // Return an empty list or handle the situation
+                return bookBoxes;
             }
-
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] bookData = line.split(",");
 
-                // Add a check for insufficient elements
                 if (bookData.length >= 7) {
                     VBox bookBox = createBookFromData(bookData);
                     bookBoxes.add(bookBox);
@@ -367,30 +350,24 @@ public class HomepageView extends Application {
                 filteredBooks.add(bookBox);
             }
         }
-
         return filteredBooks;
     }
 
 
     private void updateBookDisplay(List<VBox> filteredBooks) {
-        // Clear the existing content
         bookContainer.getChildren().clear();
 
         if (!filteredBooks.isEmpty()) {
-            // Determine the number of books per row
             int booksPerRow = 4;
 
-            // Create rows of VBox
             for (int i = 0; i < filteredBooks.size(); i += booksPerRow) {
-                StackPane row = new StackPane(); // Use StackPane for centering
-                HBox booksHBox = new HBox(); // Use HBox for horizontal arrangement
-                booksHBox.setAlignment(Pos.CENTER); // Center books in the row
-                booksHBox.setSpacing(40);  // Adjust the spacing as needed
+                StackPane row = new StackPane();
+                HBox booksHBox = new HBox();
+                booksHBox.setAlignment(Pos.CENTER);
+                booksHBox.setSpacing(40);
 
-                // Calculate the number of books to add in this row
                 int booksInThisRow = Math.min(booksPerRow, filteredBooks.size() - i);
 
-                // Create HBox for each book in this row
                 for (int j = i; j < i + booksInThisRow; j++) {
                     VBox bookVBox = filteredBooks.get(j);
                     booksHBox.getChildren().add(bookVBox);
@@ -399,7 +376,6 @@ public class HomepageView extends Application {
                 row.getChildren().add(booksHBox);
                 bookContainer.getChildren().add(row);
 
-                // Add a separator line between rows
                 if (i + booksInThisRow < filteredBooks.size()) {
                     Separator separator = new Separator();
                     separator.setOrientation(Orientation.HORIZONTAL);
@@ -407,7 +383,6 @@ public class HomepageView extends Application {
                 }
             }
         } else {
-            // Display a message if no books are found
             Text noBooksText = new Text("No matching books found.");
             noBooksText.setFont(Font.font("Arial", FontWeight.BOLD, 16));
             bookContainer.getChildren().add(noBooksText);
@@ -424,16 +399,13 @@ public class HomepageView extends Application {
         }
 
         if ("Sort".equals(filterComboBox.getValue())) {
-            // Sort logic for default sorting (e.g., sort by title)
             filteredBooks.addAll(allBooks);
             Collections.sort(filteredBooks, Comparator.comparing(this::getTitleFromBookBox));
         } else {
-            // Filter based on the selected category
             for (VBox bookBox : allBooks) {
                 Label categoryLabel = (Label) ((VBox) bookBox.getChildren().get(1)).getChildren().get(1);
                 String bookCategory = categoryLabel.getText().substring("Category: ".length());
 
-                // Use trim() to remove leading/trailing whitespaces
                 if (bookCategory.toLowerCase().trim().contains(category.toLowerCase().trim())) {
                     filteredBooks.add(bookBox);
                 }
@@ -456,16 +428,13 @@ public class HomepageView extends Application {
         }
 
         if ("Sort".equals(filterComboBox.getValue())) {
-            // Sort logic for default sorting (e.g., sort by title)
             filteredBooks.addAll(allBooks);
             Collections.sort(filteredBooks, Comparator.comparing(this::getTitleFromBookBox));
         } else {
-            // Filter based on the selected author
             for (VBox bookBox : allBooks) {
                 Label authorLabel = (Label) ((VBox) bookBox.getChildren().get(1)).getChildren().get(3);
                 String bookAuthor = authorLabel.getText().substring("Author: ".length());
 
-                // Use trim() to remove leading/trailing whitespaces and make the comparison case-insensitive
                 if (bookAuthor.toLowerCase().trim().contains(author.toLowerCase().trim())) {
                     filteredBooks.add(bookBox);
                 }
@@ -473,6 +442,26 @@ public class HomepageView extends Application {
         }
         return filteredBooks;
     }
+
+    private List<VBox> filterBooksByISBN(List<VBox> allBooks, String partialISBN) {
+        List<VBox> filteredBooks = new ArrayList<>();
+
+        if (allBooks == null) {
+            System.out.println("Book data is not initialized.");
+            return filteredBooks;
+        }
+
+        for (VBox bookBox : allBooks) {
+            Label isbnLabel = (Label) ((VBox) bookBox.getChildren().get(1)).getChildren().get(2);
+            String bookISBN = isbnLabel.getText().substring("ISBN: ".length());
+
+            if (bookISBN.toLowerCase().startsWith(partialISBN.toLowerCase())) {
+                filteredBooks.add(bookBox);
+            }
+        }
+        return filteredBooks;
+    }
+
 
     private Button createComboBoxButton(String text) {
         Button button = new Button(text);
@@ -483,50 +472,43 @@ public class HomepageView extends Application {
         return button;
     }
 
+
+    // ... (previous code)
+
     private void handleComboBoxAction(String action) {
-        // Implement the logic for each action
-        switch (action) {
-            case "Create Bill":
-                try {
-                    Stage billStage = new Stage();
+        try {
+            Stage newStage = new Stage();
+            newStage.initModality(Modality.WINDOW_MODAL);
 
+            // Move the line below here
+            newStage.initOwner(bookContainer.getScene().getWindow());
 
-                    // Prevent the new stage from closing the main stage
-                    billStage.initModality(Modality.WINDOW_MODAL);
-                    billStage.initOwner(bookContainer.getScene().getWindow());
-                    new BillView().start(billStage);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                break;
-            case "Add Book":
-                try {
-                    Stage addBookStage = new Stage();
+            switch (action) {
+                case "Create Bill":
+                    new BillView().start(newStage);
+                    break;
+                case "Add Book":
+                    new AddBookView().start(newStage);
+                    break;
+                case "Check Librarian Performance":
+                    // Handle other cases similarly
+                    break;
+                case "Book Statistics":
+                    // Handle other cases similarly
+                    break;
+                case "Manage Employees":
+                    new manageEmployeesView().start(newStage);
+                    break;
+                case "Total Cost":
+                    // Handle other cases similarly
+                    break;
+                default:
+                    break;
+            }
 
-
-                    // Prevent the new stage from closing the main stage
-                    addBookStage.initModality(Modality.WINDOW_MODAL);
-                    addBookStage.initOwner(bookContainer.getScene().getWindow());
-                    new AddBookView().start(addBookStage);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                break;
-            case "Check Librarian Performance":
-                // Add your logic for 'Check Librarian Performance'
-                break;
-            case "Book Statistics":
-                // Add your logic for 'Book Statistics'
-                break;
-            case "Manage Employees":
-                // Add your logic for 'Manage Employees'
-                break;
-            case "Total Cost":
-                // Add your logic for 'Total Cost'
-                break;
-            default:
-                break;
+            // Move the line above here
+            newStage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    }
-
-}
+    }}

@@ -13,6 +13,9 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import java.time.ZoneId;
+import java.util.Date;
+
 public class manageEmployeesView extends Application {
     private ManageEmployeesController controller;
 
@@ -87,7 +90,6 @@ public class manageEmployeesView extends Application {
     private void showRegistrationForm(VBox dataContainer) {
         dataContainer.getChildren().clear();
 
-        // New fields for username and password
         Label usernameLabel = new Label("Username:");
         TextField usernameTextField = new TextField();
 
@@ -109,8 +111,8 @@ public class manageEmployeesView extends Application {
         Label salaryLabel = new Label("Salary:");
         TextField salaryTextField = new TextField();
 
-        Label roleLabel = new Label("Role:");  // New Label for Role
-        ComboBox<Role> roleComboBox = new ComboBox<>();  // New ComboBox for Role
+        Label roleLabel = new Label("Role:");
+        ComboBox<Role> roleComboBox = new ComboBox<>();
         roleComboBox.getItems().addAll(Role.LIBRARIAN, Role.MANAGER, Role.ADMINISTRATOR);
         roleComboBox.setValue(Role.LIBRARIAN);
 
@@ -128,50 +130,50 @@ public class manageEmployeesView extends Application {
         );
 
         registerButton.setOnAction(e -> {
-            // Retrieve data from the fields
             String username = usernameTextField.getText();
             String password = passwordField.getText();
             String name = nameTextField.getText();
-            // Retrieve other fields similarly
+            Date birthday = Date.from(birthdayDatePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+            String phone = phoneTextField.getText();
+            String email = emailTextField.getText();
+            double salary = Double.parseDouble(salaryTextField.getText());
+            Role role = roleComboBox.getValue();
 
-            // Validate and process the data (e.g., register the employee)
+            // Register the employee using the controller
+            controller.registerEmployee(username, password, name, birthday, phone, email, salary, role);
 
-            // Example: Displaying the entered data
-            String registrationInfo = "Username: " + username +
-                    "\nPassword: " + password +
-                    "\nName: " + name +
-                    "\nBirthday: " + birthdayDatePicker.getValue() +
-                    "\nPhone: " + phoneTextField.getText() +
-                    "\nEmail: " + emailTextField.getText() +
-                    "\nSalary: " + salaryTextField.getText() +
-                    "\nRole: " + roleComboBox.getValue();
-
-            showAlert("Registration Successful", registrationInfo);
+            showAlert("Registration Successful", "Employee registered successfully.");
         });
     }
-
-
 
     private void showDeleteOptions(VBox dataContainer) {
         dataContainer.getChildren().clear();
 
-        ToggleGroup deleteOptionsGroup = new ToggleGroup();
-
-        RadioButton librarianRadioButton = new RadioButton("Librarian");
-        RadioButton managerRadioButton = new RadioButton("Manager");
-
-        librarianRadioButton.setToggleGroup(deleteOptionsGroup);
-        managerRadioButton.setToggleGroup(deleteOptionsGroup);
+        Label usernameLabel = new Label("Enter Username:");
+        TextField usernameTextField = new TextField();
 
         Button deleteButton = new Button("Delete");
-        dataContainer.getChildren().addAll(
-                librarianRadioButton,
-                managerRadioButton,
-                deleteButton
-        );
+        dataContainer.getChildren().addAll(usernameLabel, usernameTextField, deleteButton);
 
-        VBox.setMargin(deleteButton, new Insets(10, 0, 0, 0));
+        deleteButton.setOnAction(e -> {
+            String username = usernameTextField.getText().trim();
+            if (!username.isEmpty()) {
+                // Call the controller method to check if the username exists
+                boolean usernameExists = controller.doesUsernameExist(username);
+
+                if (usernameExists) {
+                    // If the username exists, proceed with deletion
+                    controller.deleteEmployee(username);
+                    showAlert("Deletion Successful", "Employee with username " + username + " deleted successfully.");
+                } else {
+                    showAlert("Username Not Found", "The entered username does not exist.");
+                }
+            } else {
+                showAlert("Username is empty", "Please enter a username.");
+            }
+        });
     }
+
 
     private void showModifyOptions(VBox dataContainer, String username) {
         dataContainer.getChildren().clear();
@@ -191,8 +193,10 @@ public class manageEmployeesView extends Application {
         Label salaryLabel = new Label("Salary:");
         TextField salaryTextField = new TextField();
 
-        Label accessLevelLabel = new Label("Access Level:");
-        TextField accessLevelTextField = new TextField();
+        Label roleLabel = new Label("Role:");
+        ComboBox<Role> roleComboBox = new ComboBox<>();
+        roleComboBox.getItems().addAll(Role.LIBRARIAN, Role.MANAGER, Role.ADMINISTRATOR);
+        roleComboBox.setValue(Role.LIBRARIAN);
 
         Button saveButton = new Button("Save");
         dataContainer.getChildren().addAll(
@@ -201,19 +205,22 @@ public class manageEmployeesView extends Application {
                 phoneLabel, phoneTextField,
                 emailLabel, emailTextField,
                 salaryLabel, salaryTextField,
-                accessLevelLabel, accessLevelTextField,
+                roleLabel, roleComboBox,
                 saveButton
         );
 
         saveButton.setOnAction(e -> {
-            String modifications = "Name: " + nameTextField.getText() +
-                    "\nBirthday: " + birthdayDatePicker.getValue() +
-                    "\nPhone: " + phoneTextField.getText() +
-                    "\nEmail: " + emailTextField.getText() +
-                    "\nSalary: " + salaryTextField.getText() +
-                    "\nAccess Level: " + accessLevelTextField.getText();
+            String name = nameTextField.getText();
+            Date birthday = Date.from(birthdayDatePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+            String phone = phoneTextField.getText();
+            String email = emailTextField.getText();
+            double salary = Double.parseDouble(salaryTextField.getText());
+            Role role = roleComboBox.getValue();
 
-            showAlert("Success", "Modifications saved:\n" + modifications);
+            // Call the modifyEmployee method in the controller to update the employee data
+            controller.modifyEmployee(username, null, name, birthday, phone, email, salary, role);
+
+            showAlert("Success", "Modifications saved.");
         });
     }
     private void showUsernamePrompt(VBox dataContainer) {
@@ -228,12 +235,21 @@ public class manageEmployeesView extends Application {
         submitButton.setOnAction(e -> {
             String username = usernameTextField.getText().trim();
             if (!username.isEmpty()) {
-                showModifyOptions(dataContainer, username);
+                // Call the controller method to check if the username exists
+                boolean usernameExists = controller.doesUsernameExist(username);
+
+                if (usernameExists) {
+                    // If the username exists, proceed with modification options
+                    showModifyOptions(dataContainer, username);
+                } else {
+                    showAlert("Username Not Found", "The entered username does not exist.");
+                }
             } else {
                 showAlert("Username is empty", "Please enter a username.");
             }
         });
     }
+
 
     private void showPermissionsOptions(VBox dataContainer) {
         dataContainer.getChildren().clear();

@@ -18,29 +18,30 @@ import java.util.ArrayList;
 
 public class LogInController {
     private ArrayList<User> userList;
-    private final String filePath="user_data.dat";
+    private final String filePath = "employeeData.bin";
 
 
-    public void initialize(LoginView loginView){
+    public void initialize(LoginView loginView) {
         TextField usernameTextField = loginView.getUsernameTextField();
         PasswordField passwordField = loginView.getPasswordField();
         Button loginButton = loginView.getLoginButton();
 
-        loginButton.setOnAction(e->{
-            String username=usernameTextField.getText();
-            String password=passwordField.getText();
+        loginButton.setOnAction(e -> {
+            String username = usernameTextField.getText();
+            String password = passwordField.getText();
 
-            try{
-                userValidation(username,password);
-                showInformationAlert("Login Successful","Welcome "+ username +"!");
+            try {
+                userValidation(username, password);
+                showInformationAlert("Login Successful", "Welcome " + username + "!");
                 openHomepageView(loginView);
-            } catch (InvalidEmailException | IncorrectPasswordException | InvalidPhoneNumberException ex){
-                showErrorAlert("Login Failed",ex.getMessage());
+            } catch (InvalidEmailException | IncorrectPasswordException | InvalidPhoneNumberException ex) {
+                showErrorAlert("Login Failed", ex.getMessage());
             }
         });
 
         userList = loadUserFromFile();
     }
+
     private ArrayList<User> loadUserFromFile() {
         BinaryFileHandler<ArrayList<User>> fileHandler = new BinaryFileHandler<>();
 
@@ -54,19 +55,20 @@ public class LogInController {
     }
 
 
-    private void userValidation(String username, String password) throws InvalidEmailException, IncorrectPasswordException, InvalidPhoneNumberException{
-        boolean foundUser=false;
-        for(User user : userList){
-            if(user.getUsername().equals(username) && user.getPassword().equals(password)){
-                foundUser=true;
+    private void userValidation(String username, String password) throws InvalidEmailException, IncorrectPasswordException, InvalidPhoneNumberException {
+        boolean foundUser = false;
+        for (User user : userList) {
+            if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
+                foundUser = true;
                 break;
             }
         }
 
-        if(!foundUser){
+        if (!foundUser) {
             throw new IncorrectPasswordException();
         }
     }
+
     private void openHomepageView(LoginView loginView) {
         // Close the login stage
         Stage loginStage = (Stage) loginView.getLoginButton().getScene().getWindow();
@@ -80,8 +82,9 @@ public class LogInController {
             e.printStackTrace();
         }
     }
-    private void showInformationAlert(String title, String content){
-        Platform.runLater(()->{
+
+    private void showInformationAlert(String title, String content) {
+        Platform.runLater(() -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle(title);
             alert.setHeaderText(null);
@@ -90,8 +93,8 @@ public class LogInController {
         });
     }
 
-    private void showErrorAlert(String title, String content){
-        Platform.runLater(()->{
+    private void showErrorAlert(String title, String content) {
+        Platform.runLater(() -> {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle(title);
             alert.setHeaderText(null);
