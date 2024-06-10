@@ -1,3 +1,0 @@
-Bill Number: 7
-Title: Demon Slayer, Category: Manga, ISBN: 9876-54-3210, Author: Koyoharu Gotouge, Price: 40.0, Quantity: 2
-Total Price: $80.0

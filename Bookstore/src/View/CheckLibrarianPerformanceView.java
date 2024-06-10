@@ -1,4 +1,5 @@
 package View;
+
 import Model.User;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -21,8 +22,6 @@ import java.time.temporal.ChronoUnit;
 
 public class CheckLibrarianPerformanceView extends Application {
     private Label dataLabel;
-
-
     @Override
     public void start(Stage stage) {
         VBox vbox = new VBox();
@@ -90,7 +89,6 @@ public class CheckLibrarianPerformanceView extends Application {
         stage.setFullScreen(true);
         stage.show();
     }
-
     private User[] readUserDataFromBinaryFile(String filePath) {
         try (InputStream inputStream = getClass().getResourceAsStream(filePath);
              ObjectInputStream objectInputStream = new ObjectInputStream(inputStream)) {
@@ -108,14 +106,11 @@ public class CheckLibrarianPerformanceView extends Application {
             return null;
         }
     }
-
     private void showData(LocalDate singleDate, LocalDate startDate, LocalDate endDate) {
         User[] users = readUserDataFromBinaryFile("/user_data.dat");
-
         if (users != null) {
             StringBuilder dataStringBuilder = new StringBuilder();
             for (User user : users) {
-                // Assuming User class has appropriate getters
                 String userData = "Username: " + user.getUsername() +
                         ", Role: " + user.getRole() +
                         ", Name: " + user.getName() +
@@ -126,11 +121,9 @@ public class CheckLibrarianPerformanceView extends Application {
 
                 dataStringBuilder.append(userData).append("\n");
             }
-
             dataLabel.setText("User Data:\n" + dataStringBuilder.toString());
         }
     }
-
     public static void main(String[] args) {
         launch(args);
     }

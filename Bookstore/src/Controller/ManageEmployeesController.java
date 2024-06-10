@@ -17,7 +17,6 @@ public class ManageEmployeesController {
     public ManageEmployeesController() {
         this.employees = new ArrayList<>();
         this.fileHandler = new BinaryFileHandler<>();
-        // Load existing employee data from the binary file, if available
         loadEmployeeData();
     }
 
@@ -25,7 +24,6 @@ public class ManageEmployeesController {
                                  String phone, String email, double salary, Role role) {
         User employee = new User(username, password, role, name, birthday, phone, email, salary);
 
-        // Set permissions based on the user's role
         switch (role) {
             case LIBRARIAN:
                 employee.addPermission(Permission.ADD_BOOK);
@@ -42,62 +40,48 @@ public class ManageEmployeesController {
             default:
                 break;
         }
-
         employees.add(employee);
         saveEmployeeData();
     }
-
 
     public boolean doesUsernameExist(String username) {
         return employees.stream().anyMatch(employee -> employee.getUsername().equals(username));
     }
 
-    // In ManageEmployeesController class
-
     public void modifyEmployee(String username, String newPassword, String newName, Date newBirthday,
                                String newPhone, String newEmail, double newSalary, Role newRole) {
-        // Check if the username exists
+
         boolean usernameExists = doesUsernameExist(username);
 
         if (usernameExists) {
             User foundEmployee = findEmployeeByUsername(username);
 
             try {
-                // Update employee data
                 if (newPassword != null) {
-                    // Check if newPassword is not null before using matches
                     if (newPassword.matches("^.*[a-zA-Z].*$")) {
                         foundEmployee.setPassword(newPassword);
                     } else {
-                        // Handle invalid password case (show an alert or take appropriate action)
                         showAlert("Invalid Password", "Please enter a valid password.");
-                        return; // Return to avoid further processing with invalid password
+                        return;
                     }
                 }
-
-                // Update other employee data
                 foundEmployee.setName(newName);
                 foundEmployee.setBirthday(newBirthday);
                 foundEmployee.setPhone(newPhone);
                 foundEmployee.setEmail(newEmail);
                 foundEmployee.setSalary(newSalary);
                 foundEmployee.setRole(newRole);
-
-                // Save the updated employee data
                 saveEmployeeData();
             } catch (Exceptions.IncorrectPasswordException | Exceptions.InvalidPhoneNumberException |
                      Exceptions.InvalidEmailException e) {
-                // Handle or log the exceptions here
             }
         } else {
-            // If the username doesn't exist, display a pop-up
             showAlert("Username Not Found", "The entered username does not exist.");
         }
     }
 
     public void deleteEmployee(String username) {
         User employeeToRemove = findEmployeeByUsername(username);
-
         if (employeeToRemove != null) {
             employees.remove(employeeToRemove);
             saveEmployeeData();
@@ -114,13 +98,18 @@ public class ManageEmployeesController {
     }
 
     public void loadEmployeeData() {
-        // Use the file handler to read data from the file
-        employees = fileHandler.readObjectFromFile("employeeData.bin");
+        employees = fileHandler.readObjectFromFile("Bookstore_Software_Project/Bookstore/src/user_data.dat");
     }
 
-    private void saveEmployeeData() {
-        // Use the file handler to write data to the file
-        fileHandler.writeObjectToFile(employees, "employeeData.bin", false);
+    public User getUserByUsername(String username) {
+        return employees.stream()
+                .filter(user -> user.getUsername().equals(username))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public void saveEmployeeData() {
+        fileHandler.writeObjectToFile(employees, "Bookstore_Software_Project/Bookstore/src/user_data.dat", false);
     }
 
     private void showAlert(String title, String content) {
@@ -130,12 +119,13 @@ public class ManageEmployeesController {
         alert.setContentText(content);
         alert.showAndWait();
     }
+
     public BinaryFileHandler<List<User>> getFileHandler() {
         return fileHandler;
     }
+
     public void printEmployeeDataToConsole() {
         System.out.println("Employee Data:");
-
         for (User employee : employees) {
             System.out.println("Username: " + employee.getUsername());
             System.out.println("Name: " + employee.getName());

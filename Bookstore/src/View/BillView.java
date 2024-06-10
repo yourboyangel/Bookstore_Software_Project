@@ -20,8 +20,8 @@ import java.util.Scanner;
 public class BillView extends Application {
     private static final String FILE_PATH = "billData.txt";
     private static final String PRINTABLE_BILL_PATH = "printableBills";
-    private static final String BOOK_DATA_PATH = "Bookstore/src/bookData.txt";
-    private static final String BILL_NUMBER_FILE = "billNumber.txt";
+    private static final String BOOK_DATA_PATH = "Bookstore_Software_Project/Bookstore/src/bookData.txt";
+    private static final String BILL_NUMBER_FILE = "Bookstore_Software_Project/billNumber.txt";
 
     private double totalPrice = 0;
     private int billNumber;
@@ -44,7 +44,7 @@ public class BillView extends Application {
     public void start(Stage billStage) {
         billStage.setTitle("Create bill");
 
-        double rectangleWidth = 800;
+        double rectangleWidth = 400;
         double rectangleHeight = 600;
 
         Rectangle background = new Rectangle(rectangleWidth, rectangleHeight);
@@ -73,7 +73,6 @@ public class BillView extends Application {
         billNumberLabel.setStyle("-fx-font-size: 14pt; -fx-font-weight: bold;");
         grid.add(billNumberLabel, 0, 9, 2, 1);
 
-        // Create TableView to display added books
         bookTableView = new TableView<>();
         TableColumn<Book, String> titleColumn = new TableColumn<>("Title");
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
@@ -116,7 +115,6 @@ public class BillView extends Application {
 
                 billNumberLabel.setText("Bill Number: " + billNumber);
 
-                // Add the book to the TableView
                 books.add(new Book(title, quantity, bookTotalPrice));
 
                 titleField.clear();
@@ -128,10 +126,7 @@ public class BillView extends Application {
 
         Button submitButton = new Button("Create Bill");
         submitButton.setOnAction(e -> {
-            // Process the added books and save to file
             processAddedBooks();
-
-            // Clear the TableView and reset the total price
             books.clear();
             totalPrice = 0;
             totalLabel.setText("Total Price: $" + totalPrice);
@@ -166,7 +161,6 @@ public class BillView extends Application {
                 writer.write(bookInfo);
                 writer.newLine();
 
-                // Ensure the directory exists
                 File printableBillDir = new File(PRINTABLE_BILL_PATH);
                 if (!printableBillDir.exists()) {
                     if (!printableBillDir.mkdirs()) {
@@ -199,7 +193,7 @@ public class BillView extends Application {
                 String[] parts = line.split(",");
 
                 if (parts.length == 8) {
-                    String bookTitle = parts[1].trim();  // Assuming the title is at index 1
+                    String bookTitle = parts[1].trim();
                     if (bookTitle.equalsIgnoreCase(title.trim())) {
                         String category = parts[2].trim();
                         String isbn = parts[3].trim();
@@ -219,8 +213,6 @@ public class BillView extends Application {
     }
 
 
-
-
     private void showAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle(title);
@@ -234,7 +226,7 @@ public class BillView extends Application {
                 billNumber = scanner.nextInt();
             }
         } catch (FileNotFoundException e) {
-            // File not found, use default value
+
             billNumber = 1;
         }
     }

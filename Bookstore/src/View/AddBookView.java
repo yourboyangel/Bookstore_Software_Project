@@ -32,11 +32,9 @@ public class AddBookView extends Application {
     private TextField purchasingPriceField;
     private TextField stockField;
     private Button submitButton;
-
     public static void main(String[] args) {
         launch(args);
     }
-
     @Override
     public void start(Stage addBookStage) {
         addBookStage.setTitle("Add Book");

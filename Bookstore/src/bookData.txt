@@ -7,3 +7,5 @@ book6.jpg,Atomic Habits,Self-Improvement,9876-54-3210,James Clear,80,40,20
 book7.jpg,Dragon Ball Super,Manga,1234-23-4321,Akira Toriyama,48,35,40
 book8.jpg,Rich Dad Poor Dad,Finance,5678-45-6789,Robert T.Kiyosaki,40,25,30
 book9.jpg,Harry Potter,Fantasy,2223-34-3564,J.K.Rowling,35,28,20
+book3.jpg,Test3,Fiction,1234-43-1234,Indrit Ferati,80,20,78
+book4.jpg,Test4,Romance,1111-22-3333,Engjell Abazaj,60,20,40

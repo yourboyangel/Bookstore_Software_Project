@@ -12,6 +12,6 @@ public class LibrarianPermissions implements Permission, Serializable {
 
     @Override
     public boolean hasPermission(Role role, String permission) {
-        return false; // Implement as needed
+        return false;
     }
 }

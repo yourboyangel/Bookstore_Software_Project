@@ -4,7 +4,7 @@ import Model.Role;
 
 import java.io.Serializable;
 
-public interface Permission{
+public interface Permission {
     String CREATE_BILL = "CREATE_BILL";
     String ADD_BOOK = "ADD_BOOK";
     String CHECK_LIBRARIAN_PERFORMANCE = "CHECK_LIBRARIAN_PERFORMANCE";

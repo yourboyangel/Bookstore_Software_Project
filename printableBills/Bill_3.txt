@@ -1,0 +1,3 @@
+Bill Number: 3
+Title: Can't Hurt Me, Quantity: 4, Total Price: $220.0
+Total Price: $220.0

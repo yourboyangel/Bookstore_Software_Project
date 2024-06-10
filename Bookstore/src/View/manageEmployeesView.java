@@ -2,6 +2,8 @@ package View;
 
 import Controller.ManageEmployeesController;
 import Model.Role;
+import Model.User;
+import Permissions.Permission;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -13,12 +15,12 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import javax.swing.text.View;
 import java.time.ZoneId;
 import java.util.Date;
 
 public class manageEmployeesView extends Application {
     private ManageEmployeesController controller;
-
 
     public static void main(String[] args) {
         launch(args);
@@ -27,24 +29,18 @@ public class manageEmployeesView extends Application {
     @Override
     public void start(Stage primaryStage) {
         controller = new ManageEmployeesController();
-
-
         primaryStage.setTitle("Employee Management");
-
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(20, 20, 20, 20));
-
         Label actionLabel = new Label("Select Action:");
         actionLabel.setFont(Font.font("Times New Roman", FontWeight.BOLD, 14));
         grid.add(actionLabel, 0, 0);
-
         ComboBox<String> actionComboBox = new ComboBox<>();
         actionComboBox.getItems().addAll("Select", "Register", "Modify", "Delete", "Permissions");
         actionComboBox.setValue("Select");
         grid.add(actionComboBox, 1, 0);
-
         VBox dataContainer = new VBox();
         dataContainer.setAlignment(Pos.CENTER);
         dataContainer.setPadding(new Insets(20, 20, 20, 20));
@@ -56,10 +52,8 @@ public class manageEmployeesView extends Application {
                         "-fx-padding: 10px;"
         );
         grid.add(dataContainer, 0, 1, 2, 1);
-
         Scene scene = new Scene(grid, 400, 600);
         primaryStage.setScene(scene);
-
         actionComboBox.setOnAction(e -> {
             String selectedAction = actionComboBox.getValue();
             if (selectedAction.equals("Register")) {
@@ -67,16 +61,13 @@ public class manageEmployeesView extends Application {
             } else if (selectedAction.equals("Delete")) {
                 showDeleteOptions(dataContainer);
             } else if (selectedAction.equals("Permissions")) {
-                showPermissionsOptions(dataContainer); // Swapped functionality
-
+                showPermissionsOptions(dataContainer);
             } else if (selectedAction.equals("Modify")) {
-                showUsernamePrompt(dataContainer); // Swapped functionality
-
+                showUsernamePrompt(dataContainer);
             } else {
                 dataContainer.getChildren().clear();
             }
         });
-
         primaryStage.show();
         centerStage(primaryStage);
     }
@@ -95,19 +86,14 @@ public class manageEmployeesView extends Application {
 
         Label passwordLabel = new Label("Password:");
         PasswordField passwordField = new PasswordField();
-
         Label nameLabel = new Label("Name:");
         TextField nameTextField = new TextField();
-
         Label birthdayLabel = new Label("Birthday:");
         DatePicker birthdayDatePicker = new DatePicker();
-
         Label phoneLabel = new Label("Phone:");
         TextField phoneTextField = new TextField();
-
         Label emailLabel = new Label("Email:");
         TextField emailTextField = new TextField();
-
         Label salaryLabel = new Label("Salary:");
         TextField salaryTextField = new TextField();
 
@@ -139,7 +125,7 @@ public class manageEmployeesView extends Application {
             double salary = Double.parseDouble(salaryTextField.getText());
             Role role = roleComboBox.getValue();
 
-            // Register the employee using the controller
+
             controller.registerEmployee(username, password, name, birthday, phone, email, salary, role);
 
             showAlert("Registration Successful", "Employee registered successfully.");
@@ -158,11 +144,11 @@ public class manageEmployeesView extends Application {
         deleteButton.setOnAction(e -> {
             String username = usernameTextField.getText().trim();
             if (!username.isEmpty()) {
-                // Call the controller method to check if the username exists
+
                 boolean usernameExists = controller.doesUsernameExist(username);
 
                 if (usernameExists) {
-                    // If the username exists, proceed with deletion
+
                     controller.deleteEmployee(username);
                     showAlert("Deletion Successful", "Employee with username " + username + " deleted successfully.");
                 } else {
@@ -180,16 +166,12 @@ public class manageEmployeesView extends Application {
 
         Label nameLabel = new Label("Name:");
         TextField nameTextField = new TextField();
-
         Label birthdayLabel = new Label("Birthday:");
         DatePicker birthdayDatePicker = new DatePicker();
-
         Label phoneLabel = new Label("Phone:");
         TextField phoneTextField = new TextField();
-
         Label emailLabel = new Label("Email:");
         TextField emailTextField = new TextField();
-
         Label salaryLabel = new Label("Salary:");
         TextField salaryTextField = new TextField();
 
@@ -217,29 +199,27 @@ public class manageEmployeesView extends Application {
             double salary = Double.parseDouble(salaryTextField.getText());
             Role role = roleComboBox.getValue();
 
-            // Call the modifyEmployee method in the controller to update the employee data
+
             controller.modifyEmployee(username, null, name, birthday, phone, email, salary, role);
 
             showAlert("Success", "Modifications saved.");
         });
     }
+
     private void showUsernamePrompt(VBox dataContainer) {
         dataContainer.getChildren().clear();
-
         Label usernameLabel = new Label("Enter Username:");
         TextField usernameTextField = new TextField();
-
         Button submitButton = new Button("Submit");
         dataContainer.getChildren().addAll(usernameLabel, usernameTextField, submitButton);
-
         submitButton.setOnAction(e -> {
             String username = usernameTextField.getText().trim();
             if (!username.isEmpty()) {
-                // Call the controller method to check if the username exists
+
                 boolean usernameExists = controller.doesUsernameExist(username);
 
                 if (usernameExists) {
-                    // If the username exists, proceed with modification options
+
                     showModifyOptions(dataContainer, username);
                 } else {
                     showAlert("Username Not Found", "The entered username does not exist.");
@@ -254,37 +234,85 @@ public class manageEmployeesView extends Application {
     private void showPermissionsOptions(VBox dataContainer) {
         dataContainer.getChildren().clear();
 
-        TextArea inputTextArea = new TextArea();
-        inputTextArea.setPromptText("Enter username...");
-
-        inputTextArea.setPrefHeight(50);
-
-        Button createBillButton = new Button("CREATE BILL");
-        Button addBookButton = new Button("ADD BOOK");
-        Button checkPerformanceButton = new Button("CHECK LIBRARIAN PERFORMANCE");
-        Button seeStatisticsButton = new Button("SEE BOOK STATISTICS");
-        Button manageEmployeesButton = new Button("MANAGE EMPLOYEES");
-        Button totalCostButton = new Button("TOTAL COST");
+        Label usernameLabel = new Label("Enter Username:");
+        TextField usernameTextField = new TextField();
         Button submitButton = new Button("Submit");
 
-        VBox buttonsVBox = new VBox(
-                createBillButton, addBookButton,
-                checkPerformanceButton, seeStatisticsButton,
-                manageEmployeesButton, totalCostButton, submitButton);
-        dataContainer.getChildren().addAll(
-                inputTextArea,
-                buttonsVBox);
+        CheckBox createBillCheckbox = new CheckBox("CREATE BILL");
+        CheckBox addBookCheckbox = new CheckBox("ADD BOOK");
+        CheckBox checkPerformanceCheckbox = new CheckBox("CHECK LIBRARIAN PERFORMANCE");
+        CheckBox seeStatisticsCheckbox = new CheckBox("SEE BOOK STATISTICS");
+        CheckBox manageEmployeesCheckbox = new CheckBox("MANAGE EMPLOYEES");
+        CheckBox totalCostCheckbox = new CheckBox("TOTAL COST");
 
-        VBox.setMargin(buttonsVBox, new Insets(10, 0, 0, 20));
-        VBox.setMargin(inputTextArea, new Insets(10, 0, 0, 0));
+        VBox checkboxesVBox = new VBox(
+                createBillCheckbox, addBookCheckbox,
+                checkPerformanceCheckbox, seeStatisticsCheckbox,
+                manageEmployeesCheckbox, totalCostCheckbox);
+
+        dataContainer.getChildren().addAll(usernameLabel, usernameTextField, submitButton, checkboxesVBox);
+
+        VBox.setMargin(checkboxesVBox, new Insets(10, 0, 0, 20));
+        VBox.setMargin(usernameLabel, new Insets(10, 0, 0, 0));
 
         submitButton.setOnAction(e -> {
-            String modifications = inputTextArea.getText().trim();
-            if (!modifications.isEmpty()) {
-                showAlert("Success", "Modifications saved: " + modifications);
-            } else {
-                showAlert("Modifications are empty", "Please enter modifications.");
+            String enteredUsername = usernameTextField.getText().trim();
+
+            if (enteredUsername.isEmpty()) {
+                showAlert("Username is empty", "Please enter a username.");
+                return;
             }
+
+
+            if (!controller.doesUsernameExist(enteredUsername)) {
+                showAlert("Username Not Found", "The entered username does not exist.");
+                return;
+            }
+
+
+            User user = controller.getUserByUsername(enteredUsername);
+
+
+            if (createBillCheckbox.isSelected()) {
+                user.addPermission(Permission.CREATE_BILL);
+            } else {
+                user.removePermission(Permission.CREATE_BILL);
+            }
+
+            if (addBookCheckbox.isSelected()) {
+                user.addPermission(Permission.ADD_BOOK);
+            } else {
+                user.removePermission(Permission.ADD_BOOK);
+            }
+
+            if (checkPerformanceCheckbox.isSelected()) {
+                user.addPermission(Permission.CHECK_LIBRARIAN_PERFORMANCE);
+            } else {
+                user.removePermission(Permission.CHECK_LIBRARIAN_PERFORMANCE);
+            }
+
+            if (seeStatisticsCheckbox.isSelected()) {
+                user.addPermission(Permission.SEE_BOOK_STATISTICS);
+            } else {
+                user.removePermission(Permission.SEE_BOOK_STATISTICS);
+            }
+
+            if (manageEmployeesCheckbox.isSelected()) {
+                user.addPermission(Permission.MANAGE_EMPLOYEES);
+            } else {
+                user.removePermission(Permission.MANAGE_EMPLOYEES);
+            }
+
+            if (totalCostCheckbox.isSelected()) {
+                user.addPermission(Permission.TOTAL_COST);
+            } else {
+                user.removePermission(Permission.TOTAL_COST);
+            }
+
+            controller.saveEmployeeData();
+
+
+            showAlert("Success", "Permissions updated for user " + enteredUsername + ".");
         });
     }
 

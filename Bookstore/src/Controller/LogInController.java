@@ -1,5 +1,4 @@
 package Controller;
-
 import Exceptions.IncorrectPasswordException;
 import Exceptions.InvalidEmailException;
 import Exceptions.InvalidPhoneNumberException;
@@ -13,13 +12,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
 import java.util.ArrayList;
 
 public class LogInController {
     private ArrayList<User> userList;
-    private final String filePath = "employeeData.bin";
-
+    private final String filePath = "Bookstore_Software_Project/Bookstore/src/user_data.dat";
 
     public void initialize(LoginView loginView) {
         TextField usernameTextField = loginView.getUsernameTextField();
@@ -54,7 +51,6 @@ public class LogInController {
         }
     }
 
-
     private void userValidation(String username, String password) throws InvalidEmailException, IncorrectPasswordException, InvalidPhoneNumberException {
         boolean foundUser = false;
         for (User user : userList) {
@@ -70,11 +66,10 @@ public class LogInController {
     }
 
     private void openHomepageView(LoginView loginView) {
-        // Close the login stage
+
         Stage loginStage = (Stage) loginView.getLoginButton().getScene().getWindow();
         loginStage.close();
 
-        // Open the HomepageView
         try {
             Stage homepageStage = new Stage();
             new HomepageView().start(homepageStage);
@@ -102,6 +97,4 @@ public class LogInController {
             alert.showAndWait();
         });
     }
-
-
 }

@@ -1,10 +1,8 @@
 package View;
-
+import Controller.ManageEmployeesController;
 import javafx.application.Application;
-
 import java.util.Collections;
 import java.util.Comparator;
-
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -22,22 +20,21 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-
 public class HomepageView extends Application {
     private VBox bookContainer;
     private ComboBox<String> filterComboBox;
     private List<VBox> bookBoxes;
     private List<VBox> originalOrder;
-
+    private ManageEmployeesController controller;
     public static void main(String[] args) {
         launch(args);
     }
-
     public void start(Stage stage) {
+        this.controller = controller;
+
         VBox vbox = new VBox();
         vbox.setAlignment(Pos.TOP_CENTER);
 
@@ -69,7 +66,6 @@ public class HomepageView extends Application {
             updateBookDisplay(filteredBooks);
         });
 
-
         filterComboBox = new ComboBox<>();
         filterComboBox.getItems().addAll("Sort", "Title", "Category", "Authors", "ISBN");
         filterComboBox.setValue("Sort");
@@ -89,38 +85,30 @@ public class HomepageView extends Application {
             } else {
                 return;
             }
-
             updateBookDisplay(filteredBooks);
         });
-
-
         filterComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.equals("Title") && !newValue.equals("Category") && !newValue.equals("Authors") && !newValue.equals("ISBN")) {
 
                 filterComboBox.setValue("Sort");
             } else {
-
                 if (newValue.equals("Sort")) {
-
                     updateBookDisplay(originalOrder);
                 }
             }
         });
-
-
         Image secondImage = new Image("/Images/down-arrow.png");
         ImageView addImageView = new ImageView(secondImage);
+
         addImageView.setFitHeight(30);
         addImageView.setFitWidth(30);
         addImageView.setPreserveRatio(true);
+
         Button addButton = new Button("", addImageView);
         addButton.setStyle("-fx-background-color:transparent;-fx-border-color:green;-fx-border-radius:10;-fx-border-width:2;");
 
-
         ComboBox<String> actionComboBox = new ComboBox<>();
         actionComboBox.getItems().addAll("Create Bill", "Add Book", "Check Librarian Performance", "Book Statistics", "Manage Employees", "Total Cost");
-
-
         actionComboBox.setStyle("-fx-font-size: 14pt; -fx-background-color: transparent; -fx-border-color: green; -fx-border-radius: 10; -fx-border-width: 2;");
 
         actionComboBox.setOnAction(event -> {
@@ -136,14 +124,11 @@ public class HomepageView extends Application {
         Button bookStatisticsButton = createComboBoxButton("Book Statistics");
         Button manageEmployeesButton = createComboBoxButton("Manage Employees");
         Button totalCostButton = createComboBoxButton("Total Cost");
-//
-
 
         bookContainer = new VBox();
         bookContainer.setAlignment(Pos.TOP_CENTER);
         bookContainer.setSpacing(40);
         bookContainer.setPadding(new Insets(10, 40, 10, 140));
-
         bookBoxes = readBookDataFromFile("bookData.txt");
 
         originalOrder = new ArrayList<>(bookBoxes);
@@ -161,7 +146,6 @@ public class HomepageView extends Application {
                 VBox bookVBox = bookBoxes.get(j);
                 booksHBox.getChildren().add(bookVBox);
             }
-
             row.getChildren().add(booksHBox);
             bookContainer.getChildren().add(row);
 
@@ -178,7 +162,6 @@ public class HomepageView extends Application {
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setContent(bookContainer);
-
         Button backButton = new Button("Back");
         backButton.setStyle("-fx-background-color: transparent; -fx-border-color: green; -fx-border-radius: 10; -fx-border-width: 2;-fx-font-weight:bold");
         backButton.setPrefHeight(38);
@@ -189,11 +172,8 @@ public class HomepageView extends Application {
             filterComboBox.setValue("Sort");
             searchBar.clear();
         });
-
         hbox.getChildren().addAll(backButton, searchBar, filterComboBox, actionComboBox);
-
         vbox.getChildren().addAll(stackPane, hbox, scrollPane);
-
         Scene librarianScene = new Scene(vbox, 800, 600);
         stage.setScene(librarianScene);
         stage.setTitle("Librarian View");
@@ -216,7 +196,6 @@ public class HomepageView extends Application {
         }
 
         Image bookImage = new Image(imageStream);
-
         ImageView bookImageView = new ImageView(bookImage);
         bookImageView.setFitWidth(200);
         bookImageView.setFitHeight(250);
@@ -242,7 +221,6 @@ public class HomepageView extends Application {
         bookVBox.setStyle("-fx-background-color: transparent; -fx-border-color: black; -fx-border-radius: 10; -fx-border-width: 3px; -fx-padding: 10px;");
         bookVBox.setAlignment(Pos.CENTER);
         bookVBox.setPadding(new Insets(10, 0, 0, 0));
-
         return bookVBox;
     }
 
@@ -270,7 +248,6 @@ public class HomepageView extends Application {
         }
 
         Image bookImage = new Image(imageStream);
-
         ImageView bookImageView = new ImageView(bookImage);
         bookImageView.setFitWidth(200);
         bookImageView.setFitHeight(250);
@@ -330,22 +307,18 @@ public class HomepageView extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return bookBoxes;
     }
 
     private List<VBox> filterBooksByTitle(List<VBox> allBooks, String searchText) {
         List<VBox> filteredBooks = new ArrayList<>();
-
         if (allBooks == null) {
             System.out.println("Book data is not initialized.");
             return filteredBooks;
         }
-
         for (VBox bookBox : allBooks) {
             Label titleLabel = (Label) ((VBox) bookBox.getChildren().get(1)).getChildren().get(0);
             String title = titleLabel.getText().substring("Title: ".length());
-
             if (title.toLowerCase().contains(searchText.toLowerCase())) {
                 filteredBooks.add(bookBox);
             }
@@ -372,7 +345,6 @@ public class HomepageView extends Application {
                     VBox bookVBox = filteredBooks.get(j);
                     booksHBox.getChildren().add(bookVBox);
                 }
-
                 row.getChildren().add(booksHBox);
                 bookContainer.getChildren().add(row);
 
@@ -389,10 +361,8 @@ public class HomepageView extends Application {
         }
     }
 
-
     private List<VBox> filterBooksByCategory(List<VBox> allBooks, String category) {
         List<VBox> filteredBooks = new ArrayList<>();
-
         if (allBooks == null) {
             System.out.println("Book data is not initialized.");
             return filteredBooks;
@@ -421,7 +391,6 @@ public class HomepageView extends Application {
 
     private List<VBox> filterBooksByAuthor(List<VBox> allBooks, String author) {
         List<VBox> filteredBooks = new ArrayList<>();
-
         if (allBooks == null) {
             System.out.println("Book data is not initialized.");
             return filteredBooks;
@@ -473,14 +442,12 @@ public class HomepageView extends Application {
     }
 
 
-    // ... (previous code)
-
     private void handleComboBoxAction(String action) {
         try {
             Stage newStage = new Stage();
             newStage.initModality(Modality.WINDOW_MODAL);
 
-            // Move the line below here
+
             newStage.initOwner(bookContainer.getScene().getWindow());
 
             switch (action) {
@@ -491,24 +458,25 @@ public class HomepageView extends Application {
                     new AddBookView().start(newStage);
                     break;
                 case "Check Librarian Performance":
-                    // Handle other cases similarly
+                    new CheckLibrarianPerformanceView().start(newStage);
                     break;
                 case "Book Statistics":
-                    // Handle other cases similarly
+                    new BookStatisticsView().start(newStage);
                     break;
                 case "Manage Employees":
                     new manageEmployeesView().start(newStage);
                     break;
                 case "Total Cost":
-                    // Handle other cases similarly
+                    new TotalCostView().start(newStage);
                     break;
                 default:
                     break;
             }
 
-            // Move the line above here
+
             newStage.show();
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }}
+    }
+}

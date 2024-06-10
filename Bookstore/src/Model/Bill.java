@@ -5,22 +5,24 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
 public class Bill implements Serializable {
-    private static int billNumber=0;
+    private static int billNumber = 0;
     private int soldQuantity;
-    private double totalPrice=0;
+    private double totalPrice = 0;
     private GregorianCalendar transaction;
     private ArrayList<Book> soldBooks;
 
-    public Bill(){
+    public Bill() {
         billNumber++;
-    };
-    public Bill(int billNumber, GregorianCalendar transaction){
-        Bill.billNumber =billNumber;
-        this.transaction=transaction;
     }
-    public Bill(GregorianCalendar transaction){
+
+    public Bill(int billNumber, GregorianCalendar transaction) {
+        Bill.billNumber = billNumber;
+        this.transaction = transaction;
+    }
+
+    public Bill(GregorianCalendar transaction) {
         billNumber++;
-        this.transaction=transaction;
+        this.transaction = transaction;
     }
 
     public static int getBillNumber() {
@@ -51,9 +53,8 @@ public class Bill implements Serializable {
         this.soldBooks = soldBooks;
     }
 
-    public void addBookToBill(Book book){
+    public void addBookToBill(Book book) {
         soldBooks.add(book);
-        totalPrice+=book.getSellingPrice();
+        totalPrice += book.getSellingPrice();
     }
-
 }
